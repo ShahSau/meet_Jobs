@@ -4,7 +4,7 @@
     "web": {
       "bundler": "metro"
     },
-    "name": "meet_Jobs",
-    "slug": "meet_Jobs"
+    "name": "meet_jobs",
+    "slug": "meet_jobs"
   }
 }

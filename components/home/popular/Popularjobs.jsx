@@ -1,51 +1,64 @@
-import { useRouter } from 'expo-router'
-import React, {useState} from 'react'
-import { View, Text, TouchableOpacity, ActivityIndicator,FlatList } from 'react-native'
-import { COLORS, SIZES } from '../../../constants'
-import styles from './popularjobs.style'
+import { useState } from 'react';
+import { useRouter } from 'expo-router';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  FlatList,
+  ActivityIndicator,
+} from 'react-native';
+
+import styles from './popularjobs.style';
+import { COLORS, SIZES } from '../../../constants';
 import PopularJobCard from '../../common/cards/popular/PopularJobCard';
-import useFetch from '../../../hook/useFetch'
+import useFetch from '../../../hook/useFetch';
 
 const Popularjobs = () => {
-  const router = useRouter()
-  // const [loading, setLoading] = useState(false)
-  // const [error, setError] = useState(false)
+  const router = useRouter();
+  const { data, isLoading, error } = useFetch('search', {
+    query: 'React developer',
+    num_pages: '1',
+  });
 
-  const {data, loading, error} = useFetch('search',{
-    query: 'React Developer',
-    num_pages:1,
-  })
+  const [selectedJob, setSelectedJob] = useState();
 
-  console.warn(data)
+  const handleCardPress = (item) => {
+    router.push(`/job-details/${item.job_id}`);
+    setSelectedJob(item.job_id);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.headerTitle}>Popular Jobs</Text>
+        <Text style={styles.headerTitle}>Popular jobs</Text>
         <TouchableOpacity>
-          <Text style={styles.headerBtn}>View All</Text>
+          <Text style={styles.headerBtn}>Show all</Text>
         </TouchableOpacity>
       </View>
+
       <View style={styles.cardsContainer}>
-        {loading ? (
-          <ActivityIndicator size="large" color={COLORS.primary} />
-        ):error ? (
-          <Text>Something went wrong!</Text>
-        ):(
+        {isLoading ? (
+          <ActivityIndicator size='large' color={COLORS.primary} />
+        ) : error ? (
+          <Text>Something went wrong</Text>
+        ) : (
           <FlatList
-            data={[1,2,3,4,5,6,7,8,9,10]}
-            keyExtractor={(item) => item ?.job_id}
-            horizontal
-            renderItem={({item}) => (
-              <PopularJobCard 
+            data={data}
+            renderItem={({ item }) => (
+              <PopularJobCard
                 item={item}
+                selectedJob={selectedJob}
+                handleCardPress={handleCardPress}
               />
             )}
-            contentContainerStyle={{columnGap: SIZES.medium}}
+            keyExtractor={(item) => item.job_id}
+            contentContainerStyle={{ columnGap: SIZES.medium }}
+            horizontal
           />
         )}
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default Popularjobs
+export default Popularjobs;

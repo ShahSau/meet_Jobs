@@ -1,39 +1,41 @@
-import { useRouter } from 'expo-router'
-import React, {useState} from 'react'
+import { useState } from 'react';
 import {
   View,
   Text,
   TextInput,
   TouchableOpacity,
-  FlatList,
   Image,
-} from 'react-native'
-import { icons, SIZES } from '../../../constants'
+  FlatList,
+} from 'react-native';
+import { useRouter } from 'expo-router';
 
-import styles from './welcome.style'
+import styles from './welcome.style';
+import { icons, SIZES } from '../../../constants';
 
-// const jobTypes =['Full Time', 'Part Time', 'Contract', 'Freelance']
-const jobTypes= ['Full Time', 'Part Time', 'Contract']
-const Welcome = () => {
-  const router = useRouter()
-  const [activeJobType, setActiveJobType] = useState(jobTypes[0])
+const jobTypes = ['Full-time', 'Part-time', 'Contractor'];
+
+const Welcome = ({ searchTerm, setSearchTerm, handleClick }) => {
+  const router = useRouter();
+  const [activeJobType, setActiveJobType] = useState('Full-time');
+
   return (
     <View>
       <View style={styles.container}>
-        <Text style={styles.userName}>Hello Username</Text>
-        <Text style={styles.welcomeMessage}>Find your dream job</Text>
+        <Text style={styles.userName}>Hello Adrian</Text>
+        <Text style={styles.welcomeMessage}>Find your perfect job</Text>
       </View>
+
       <View style={styles.searchContainer}>
         <View style={styles.searchWrapper}>
           <TextInput
             style={styles.searchInput}
+            value={searchTerm}
+            onChangeText={(text) => setSearchTerm(text)}
             placeholder='What are you looking for?'
-            placeholderTextColor='#000'
-            value=''
-            onChange={() => {}}
           />
         </View>
-        <TouchableOpacity style={styles.searchBtn} onPress={()=>{}}>
+
+        <TouchableOpacity style={styles.searchBtn} onPress={handleClick}>
           <Image
             source={icons.search}
             resizeMode='contain'
@@ -41,6 +43,7 @@ const Welcome = () => {
           />
         </TouchableOpacity>
       </View>
+
       <View style={styles.tabsContainer}>
         <FlatList
           data={jobTypes}
@@ -49,20 +52,19 @@ const Welcome = () => {
               style={styles.tab(activeJobType, item)}
               onPress={() => {
                 setActiveJobType(item);
-                router.push(`/search/${item}`)
+                router.push(`/search/${item}`);
               }}
             >
-            <Text style={styles.tabText(activeJobType, item)}>{item}
-            </Text>
+              <Text style={styles.tabText(activeJobType, item)}>{item}</Text>
             </TouchableOpacity>
           )}
           keyExtractor={(item) => item}
+          contentContainerStyle={{ columnGap: SIZES.small }}
           horizontal
-          contentContainerStyle={{columnGap: SIZES.small}}
         />
       </View>
     </View>
-  )
-}
+  );
+};
 
-export default Welcome
+export default Welcome;
